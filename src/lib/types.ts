@@ -23,7 +23,8 @@ import {
   } from './queries'
   import { db } from './db'
   import { z } from 'zod'
-  
+
+import Razorpay from 'razorpay'
 //   import Stripe from 'stripe'
   
   export type NotificationWithUser =
@@ -124,28 +125,49 @@ import {
     email: z.string().email(),
   })
   
-//   export type Address = {
-//     city: string
-//     country: string
-//     line1: string
-//     postal_code: string
-//     state: string
-//   }
+  export type Address = {
+    city: string
+    country: string
+    line1: string
+    postal_code: string
+    state: string
+  }
   
-//   export type ShippingInfo = {
-//     address: Address
-//     name: string
-//   }
+  export type ShippingInfo = {
+    address: Address
+    name: string
+  }
   
-//   export type StripeCustomerType = {
-//     email: string
-//     name: string
-//     shipping: ShippingInfo
-//     address: Address
-//   }
-  
-  // export type PricesList = Stripe.ApiList<Stripe.Price>
-  
+  export type RazorpayCustomerType = {
+    email: string
+    name: string
+    shipping: ShippingInfo
+    address: Address
+  }
+    
+export type RazorpayPlan = {
+  id: string;
+  item: {
+    name: string;
+    active : boolean;
+    description?: string;
+    amount: string | number;   // Amount in smallest currency unit (e.g., paise)
+    currency: string | "INR"; // E.g., 'INR'
+    created_at?: number;
+  };
+  period: string; // E.g., 'monthly', 'yearly'
+  interval: number;
+};
+
+export type RazorpayApiList<T> = {
+  entity: 'collection';
+  count: number;
+  items: T[];
+};
+
+// Now you can define the Razorpay equivalent of `PricesList`:
+export type RazorpayPlanList = RazorpayApiList<RazorpayPlan>;
+
 //   export type FunnelsForSubAccount = Prisma.PromiseReturnType<
 //     typeof getFunnels
 //   >[0]

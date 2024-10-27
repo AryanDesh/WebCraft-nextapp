@@ -35,7 +35,7 @@ export const pricingCards = [
       duration: '',
       highlight: 'Key features',
       features: ['3 Sub accounts', '2 Team members', 'Unlimited pipelines'],
-      priceId: '',
+      plan: '',
     },
     {
       title: 'Unlimited Saas',
@@ -44,7 +44,7 @@ export const pricingCards = [
       duration: 'month',
       highlight: 'Key features',
       features: ['Rebilling', '24/7 Support team'],
-      priceId: 'price_1OYxkqFj9oKEERu1KfJGWxgN',
+      plan: 'plan_PCwepTaqRPplIc',
     },
     {
       title: 'Basic',
@@ -53,8 +53,12 @@ export const pricingCards = [
       duration: 'month',
       highlight: 'Everything in Starter, plus',
       features: ['Unlimited Sub accounts', 'Unlimited Team members'],
-      priceId: 'price_1OYxkqFj9oKEERu1NbKUxXxN',
+      plan: 'plan_PCwfKUDlBc3sLV',
     },
+  ]
+
+  export const addOnProducts : {title : string, id : string}[]= [
+    { title: 'Priority Support', id: 'plan_PCx2xFImcAmemR' },
   ]
 
   export const icons = [
