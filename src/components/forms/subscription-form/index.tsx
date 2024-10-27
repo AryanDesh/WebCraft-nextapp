@@ -32,6 +32,7 @@ const router = useRouter();
         body: JSON.stringify({ planId: selectedPlanId, customerId : customerId }),
       })
       const data = await res.json()
+      console.log(data);
 
       if(!data?.id){
         console.log('Failed to create subscription order')

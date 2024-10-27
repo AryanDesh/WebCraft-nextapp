@@ -1,5 +1,5 @@
 'use client'
-import SubscriptionFormWrapper from '@/components/forms/subscription-form/subscription-form-wrapper'
+// import SubscriptionFormWrapper from '@/components/forms/subscription-form/subscription-form-wrapper'
 import CustomModal from '@/components/global/custom-modal'
 import { Button } from '@/components/ui/button'
 import {
@@ -46,25 +46,25 @@ const PricingCard = ({
   const searchParams = useSearchParams()
   const plan = searchParams.get('plan')
 
-  const handleManagePlan = async () => {
-    setOpen(
-      <CustomModal
-        title={'Manage Your Plan'}
-        subheading="You can change your plan at any time from the billings settings"
-      >
-        <SubscriptionFormWrapper
-          customerId={customerId}
-          planExists={planExists}
-        />
-      </CustomModal>,
-      async () => ({
-        plans: {
-          defaultPriceId: plan ? plan : '',
-          plans: prices,
-        },
-      })
-    )
-  }
+  // const handleManagePlan = async () => {
+  //   setOpen(
+  //     <CustomModal
+  //       title={'Manage Your Plan'}
+  //       subheading="You can change your plan at any time from the billings settings"
+  //     >
+  //       <SubscriptionFormWrapper
+  //         customerId={customerId}
+  //         planExists={planExists}
+  //       />
+  //     </CustomModal>,
+  //     async () => ({
+  //       plans: {
+  //         defaultPriceId: plan ? plan : '',
+  //         plans: prices,
+  //       },
+  //     })
+  //   )
+  // }
   return (
     <Card className="flex flex-col justify-between lg:w-1/2">
       <div>
@@ -105,7 +105,7 @@ const PricingCard = ({
 
             <Button
               className="md:w-fit w-full"
-              onClick={handleManagePlan}
+              // onClick={handleManagePlan}
             >
               {buttonCta}
             </Button>

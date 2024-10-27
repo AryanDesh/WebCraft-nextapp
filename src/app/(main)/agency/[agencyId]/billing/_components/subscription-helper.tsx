@@ -1,5 +1,5 @@
 'use client'
-import SubscriptionFormWrapper from '@/components/forms/subscription-form/subscription-form-wrapper'
+// import SubscriptionFormWrapper from '@/components/forms/subscription-form/subscription-form-wrapper'
 import CustomModal from '@/components/global/custom-modal'
 import { RazorpayPlanList } from '@/lib/types'
 import { useModal } from '@/providers/modal-provider'
@@ -17,26 +17,26 @@ const SubscriptionHelper = ({ customerId, planExists, prices }: Props) => {
   const searchParams = useSearchParams()
   const plan = searchParams.get('plan')
 
-  useEffect(() => {
-    if (plan)
-      setOpen(
-        <CustomModal
-          title="Upgrade Plan!"
-          subheading="Get started today to get access to premium features"
-        >
-          <SubscriptionFormWrapper
-            planExists={planExists}
-            customerId={customerId}
-          />
-        </CustomModal>,
-        async () => ({
-          plans: {
-            defaultPriceId: plan ? plan : '',
-            plans: prices,
-          },
-        })
-      )
-  }, [plan])
+  // useEffect(() => {
+  //   if (plan)
+  //     setOpen(
+  //       <CustomModal
+  //         title="Upgrade Plan!"
+  //         subheading="Get started today to get access to premium features"
+  //       >
+  //         <SubscriptionFormWrapper
+  //           planExists={planExists}
+  //           customerId={customerId}
+  //         />
+  //       </CustomModal>,
+  //       async () => ({
+  //         plans: {
+  //           defaultPriceId: plan ? plan : '',
+  //           plans: prices,
+  //         },
+  //       })
+  //     )
+  // }, [plan])
 
   return <div>SubscriptionHelper</div>
 }
