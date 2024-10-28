@@ -1,13 +1,11 @@
 import { db } from "@/lib/db";
 import { razorpay } from "@/lib/not-stripe";
 import { NextResponse } from "next/server";
-import { current } from "tailwindcss/colors";
-import { custom } from "zod";
 
 export async function POST(req: Request) {
     const { customerId, planId } = await req.json()
     if (!customerId || !planId)
-      return new NextResponse('Customer Id or price id or Offer Id is missing', {
+      return new NextResponse('Customer Id or plan id or Offer Id is missing', {
         status: 400,
       })
   
@@ -21,7 +19,6 @@ export async function POST(req: Request) {
         subscriptionExists?.Subscription?.subscriptionId &&
         subscriptionExists.Subscription.active
       ) {
-        //update the subscription instead of creating one.
         if (!subscriptionExists.Subscription.subscriptionId) {
           throw new Error(
             'Could not find the subscription Id to update the subscription.'
@@ -34,35 +31,18 @@ export async function POST(req: Request) {
         const subscription = await razorpay.subscriptions.update(
             subscriptionExists.Subscription.subscriptionId,
             {
-              customer_notify: 1,
-              "plan_id" : planId
+              customer_notify: 1
             }
         )
-// If needed Create an invoice here.
-        // const createInvoice = await razorpay.invoices.create({
-        //   "type": "invoice",
-        //   "date": Date.now()/1000,
-        //   "customer_id": customerId,
-        //   "line_items": [
-        //     {
-        //       "item_id" : 
-        //     }
-        //   ]
-        // })
-// Get latets invoice if needed
-        // const latest_invoice = await razorpay.invoices.all({
-        //     subscription_id: subscriptionExists.Subscription.subscriptionId
-        // })
         return NextResponse.json({
           subscriptionId: subscription.id,
-          // clientSecret: latest_invoice.items[0],
           status: subscription.status,
           url: subscription.short_url,
           plan_id: subscription.plan_id,
           current_end: subscription.ended_at,
         })
       } else {
-        console.log('Creating a sub')
+        console.log('Creating a sub ',planId )
         const customer = await db.agency.findFirst({
           where: { customerId },
           include: { Subscription: true },
@@ -72,7 +52,7 @@ export async function POST(req: Request) {
             total_count: 12,
             quantity: 1,
 // may need to get the expiry date from the client itself.
-            expire_by: Date.now() + 365.25 * 24 * 60 * 60 * 1000,
+            expire_by: Date.now() + 24 * 60 * 60 * 1000,
             customer_notify: 1,
             notify_info: {
                 notify_phone: customer?.companyPhone,
@@ -81,7 +61,6 @@ export async function POST(req: Request) {
         })
         return NextResponse.json({
           subscriptionId: subscription.id,
-          // clientSecret: latest_invoice.items[0],
           status: subscription.status,
           url: subscription.short_url,
           current_end: subscription.expire_by,

@@ -12,8 +12,7 @@ import { getRazorpay } from '@/lib/not-stripe/client'
 import Loading from '@/components/global/loading'
 import SubscriptionForm from '.'
 import { subscriptionCreated } from '@/lib/not-stripe/actions'
-// import SubscriptionForm from '.'
-
+import { Subscription } from '@prisma/client'
 type Props = {
   customerId: string
   planExists: boolean
@@ -26,6 +25,8 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
   const [selectedPlanId, setSelectedPlanId] = useState<Plan | ''>(
     data?.plans?.defaultPriceId || ''
   )
+  const [SubscriptionInfo,setSubscriptionInfo] = useState<Partial<Subscription>>();
+
   const [subscription, setSubscription] = useState<{
     subscriptionId: string
     // clientSecret: string
@@ -76,10 +77,10 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
         plan_id: subscriptionResponseData.plan_id
       })
     //   Adding customer to the database using not-stripe/actions.ts
-    console.log(subscription.subscriptionId);
+    // console.log(subscription.subscriptionId);
 
       if(subscriptionResponseData.subscriptionId){
-        subscriptionCreated(subscription ,customerId = customer_id.current, false);
+        setSubscriptionInfo(await subscriptionCreated(subscription ,customerId = customer_id.current, false));
       }
       if (planExists) {
         toast({
@@ -124,15 +125,15 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
           </Card>
         ))}
 
-        {options.status && !planExists && (
+        {options.status && !planExists && SubscriptionInfo && (
           <>
-            <h1 className="text-xl">Payment Method</h1>
+            <h1 className="text-xl">Payment</h1>
             {/* <Elements
               stripe={getRazorpay()}
               options={options}
             >
             </Elements> */}
-            <SubscriptionForm selectedPlanId={selectedPlanId} customerId = {customerId} url = {subscription.url}/>
+            <SubscriptionForm subscription = {SubscriptionInfo} url ={subscription.url}/>
           </>
         )}
 

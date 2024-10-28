@@ -23,7 +23,7 @@ export const subscriptionCreated = async (
     if (!agency) {
       throw new Error('Could not find an agency to upsert the subscription')
     }
-    const planId : Plan= subscription.plan_id;
+    const planId : Plan = subscription.plan_id;
     const data : Partial<Subscription> = {
         active: active,
         agencyId: agency.id,
@@ -41,7 +41,8 @@ export const subscriptionCreated = async (
       create: cleanedData,
       update: data,
     })
-    console.log(`🟢 Created Subscription for ${subscription.subscriptionId}`)
+    console.log(`🟢 Created Subscription for ${subscription.subscriptiond}`)
+    return res;
   } catch (error) {
     console.log('🔴 Error from Create action', error)
   }
