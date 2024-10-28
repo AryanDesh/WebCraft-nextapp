@@ -6,11 +6,12 @@ import { useModal } from '@/providers/modal-provider'
 import { Plan } from '@prisma/client'
 import clsx from 'clsx'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 // import { Elements } from '@stripe/react-stripe-js'
 import { getRazorpay } from '@/lib/not-stripe/client'
 import Loading from '@/components/global/loading'
 import SubscriptionForm from '.'
+import { subscriptionCreated } from '@/lib/not-stripe/actions'
 // import SubscriptionForm from '.'
 
 type Props = {
@@ -21,16 +22,24 @@ type Props = {
 const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
   const { data, setClose } = useModal()
   const router = useRouter()
-  const [selectedPriceId, setSelectedPriceId] = useState<Plan | ''>(
+  const customer_id = useRef(customerId);
+  const [selectedPlanId, setSelectedPlanId] = useState<Plan | ''>(
     data?.plans?.defaultPriceId || ''
   )
   const [subscription, setSubscription] = useState<{
     subscriptionId: string
     // clientSecret: string
     status: string
+    url : string
+    current_end: Date
+    plan_id: string
   }>({ subscriptionId: '', 
     // clientSecret: ''
-    status: '' })
+      status: '',
+      url: '' ,
+      current_end: new Date(),
+      plan_id: ''
+    })
 
   const options = useMemo(
     () => ({
@@ -43,7 +52,7 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
   )
 
   useEffect(() => {
-    if (!selectedPriceId) return
+    if (!selectedPlanId) return
     const createSecret = async () => {
       const subscriptionResponse = await fetch(
         '/api/not-stripe/create-subscription',
@@ -54,7 +63,7 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
           },
           body: JSON.stringify({
             customerId,
-            planId: selectedPriceId,
+            planId: selectedPlanId,
           }),
         }
       )
@@ -62,7 +71,16 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
       setSubscription({
         status: subscriptionResponseData.status,
         subscriptionId: subscriptionResponseData.subscriptionId,
+        url: subscriptionResponseData.url,
+        current_end: subscriptionResponseData.current_end,
+        plan_id: subscriptionResponseData.plan_id
       })
+    //   Adding customer to the database using not-stripe/actions.ts
+    console.log(subscription.subscriptionId);
+
+      if(subscriptionResponseData.subscriptionId){
+        subscriptionCreated(subscription ,customerId = customer_id.current, false);
+      }
       if (planExists) {
         toast({
           title: 'Success',
@@ -73,34 +91,34 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
       }
     }
     createSecret()
-  }, [data, selectedPriceId, customerId])
+  }, [data, selectedPlanId, customerId])
 
   return (
     <div className="border-none transition-all">
       <div className="flex flex-col gap-4">
-        {data.plans?.plans.map((price) => (
+        {data.plans?.plans.map((plan) => (
           <Card
-            onClick={() => setSelectedPriceId(price.id as Plan)}
-            key={price.id}
+            onClick={() => setSelectedPlanId(plan.id as Plan)}
+            key={plan.id}
             className={clsx('relative cursor-pointer transition-all', {
-              'border-primary': selectedPriceId === price.id,
+              'border-primary': selectedPlanId === plan.id,
             })}
           >
             <CardHeader>
               <CardTitle>
-                ${price.item.amount ? (price.item.amount as number ) / 100 : '0'}
+                ${plan.item.amount ? (plan.item.amount as number ) / 100 : '0'}
                 <p className="text-sm text-muted-foreground">
-                  {price.item.name}
+                  {plan.item.name}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   {
-                    pricingCards.find((p) => p.plan === price.id)
+                    pricingCards.find((p) => p.plan === plan.id)
                       ?.description
                   }
                 </p>
               </CardTitle>
             </CardHeader>
-            {selectedPriceId === price.id && (
+            {selectedPlanId === plan.id && (
               <div className="w-2 h-2 bg-emerald-500 rounded-full absolute top-4 right-4" />
             )}
           </Card>
@@ -114,11 +132,11 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
               options={options}
             >
             </Elements> */}
-            <SubscriptionForm selectedPlanId={selectedPriceId} customerId = {customerId} />
+            <SubscriptionForm selectedPlanId={selectedPlanId} customerId = {customerId} url = {subscription.url}/>
           </>
         )}
 
-        {!options.status && selectedPriceId && (
+        {!options.status && selectedPlanId && (
           <div className="flex items-center justify-center w-full h-40">
             <Loading />
           </div>

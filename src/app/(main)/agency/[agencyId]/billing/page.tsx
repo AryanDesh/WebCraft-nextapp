@@ -13,7 +13,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import clsx from 'clsx'
-// import SubscriptionHelper from './_components/subscription-helper'
+import SubscriptionHelper from './_components/subscription-helper'
 
 type Props = {
   params: { agencyId: string }
@@ -60,11 +60,11 @@ const page = async ({ params }: Props) => {
 
   return (
     <>
-    {/* <SubscriptionHelper
+    <SubscriptionHelper
       prices={prices.items}
       customerId={agencySubscription?.customerId || ''}
       planExists={agencySubscription?.Subscription?.active === true}
-    /> */}
+    />
     <h1 className="text-4xl p-4">Billing</h1>
     <Separator className=" mb-6" />
     <h2 className="text-2xl p-4">Current Plan</h2>

@@ -4,17 +4,18 @@ import { useToast } from '@/components/ui/use-toast'
 import { Plan } from '@prisma/client'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { db } from '@/lib/db'
 
 
 type Props = {
   selectedPlanId: string | Plan
   customerId : string
+  url :  string
 }
 
-const SubscriptionForm = ({ selectedPlanId, customerId }: Props) => {
+const SubscriptionForm = ({ selectedPlanId, customerId, url }: Props) => {
   const { toast } = useToast()
 const router = useRouter();
-  const [status,setStatus] = useState();
   const [priceError, setPriceError] = useState('')
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     if (!selectedPlanId) {
@@ -26,35 +27,41 @@ const router = useRouter();
     if(!selectedPlanId) return;
 
     try {
-      const res = await fetch(`/api/not-stripe/fetch-subscription`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId: selectedPlanId, customerId : customerId }),
-      })
-      const data = await res.json()
-      console.log(data);
-
-      if(!data?.id){
+        const subscription = await db.subscription.findFirst({
+            where: {
+                customerId
+            }
+        })
+        if(url){
+            console.log(url);
+            window.location.href = url
+        }
+      if(!subscription){
         console.log('Failed to create subscription order')
         router.refresh();
+        return;
       }
-      if (data?.status !== "completed") {
-        window.location.href = data.url
-        return
+      if(subscription.active){
+          toast({
+            title: 'Payment successful',
+            description: 'Your payment has been successfully processed. ',
+          })
+          router.refresh();
       }
-      setStatus(data.status)
-      toast({
-        title: 'Payment successful',
-        description: 'Your payment has been successfully processed. ',
-      })
-      router.refresh();
+      else{
+        toast({
+            title: 'Incomplete Payment',
+            description: 'Your hasnt been completed, check ur email or messages for the url. ',
+          })
+          router.refresh();
+      }
     } catch (error) {
       console.log(error)
       toast({
         variant: 'destructive',
         title: 'Payment failed',
         description:
-          'We couldnt process your payment. Please try a different card',
+          'We couldnt process your payment. Please try again',
       })
     }
   }

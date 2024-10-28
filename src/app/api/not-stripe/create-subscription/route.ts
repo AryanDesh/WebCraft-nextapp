@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { razorpay } from "@/lib/not-stripe";
 import { NextResponse } from "next/server";
+import { current } from "tailwindcss/colors";
 import { custom } from "zod";
 
 export async function POST(req: Request) {
@@ -33,6 +34,7 @@ export async function POST(req: Request) {
         const subscription = await razorpay.subscriptions.update(
             subscriptionExists.Subscription.subscriptionId,
             {
+              customer_notify: 1,
               "plan_id" : planId
             }
         )
@@ -54,7 +56,10 @@ export async function POST(req: Request) {
         return NextResponse.json({
           subscriptionId: subscription.id,
           // clientSecret: latest_invoice.items[0],
-          status: subscription.status
+          status: subscription.status,
+          url: subscription.short_url,
+          plan_id: subscription.plan_id,
+          current_end: subscription.ended_at,
         })
       } else {
         console.log('Creating a sub')
@@ -77,7 +82,10 @@ export async function POST(req: Request) {
         return NextResponse.json({
           subscriptionId: subscription.id,
           // clientSecret: latest_invoice.items[0],
-          status: subscription.status
+          status: subscription.status,
+          url: subscription.short_url,
+          current_end: subscription.expire_by,
+          plan_id : subscription.plan_id
         })
       }
     } catch (error) {

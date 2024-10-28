@@ -1,16 +1,15 @@
 'use server'
-import Razorpay from 'razorpay'
 import { db } from '../db'
 import {razorpay} from '.'
-import { DevBundler } from 'next/dist/server/lib/router-utils/setup-dev-bundler'
-
-// Initialize Razorpay client
-
-
-  
+import { Subscription } from '@prisma/client'
+import { Plan } from '@prisma/client'
+function removeUndefinedFields<T>(obj: Partial<T>): T {
+  return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v !== undefined)) as T;
+}
 export const subscriptionCreated = async (
   subscription: any, // Razorpay Subscription object
-  customerId: string
+  customerId: string,
+  active : boolean
 ) => {
   try {
     const agency = await db.agency.findFirst({
@@ -24,25 +23,25 @@ export const subscriptionCreated = async (
     if (!agency) {
       throw new Error('Could not find an agency to upsert the subscription')
     }
-    const data  = {
-        active: subscription.status === 'active',
+    const planId : Plan= subscription.plan_id;
+    const data : Partial<Subscription> = {
+        active: active,
         agencyId: agency.id,
         customerId,
         currentPeriodEndDate: new Date(subscription.current_end), // current_end is used in Razorpay for subscription period
-        priceId: subscription.plan_id, // Razorpay uses plan_id
-        subscriptionId: subscription.id,
-        plan: subscription.plan_id,
-        id: ''
+        subscriptionId: subscription.subscriptionId,
+        plan: planId,
     }
-
+    const cleanedData = removeUndefinedFields(data);
+    
     const res = await db.subscription.upsert({
       where: {
         agencyId: agency.id,
       },
-      create: data,
+      create: cleanedData,
       update: data,
     })
-    console.log(`🟢 Created Subscription for ${subscription.id}`)
+    console.log(`🟢 Created Subscription for ${subscription.subscriptionId}`)
   } catch (error) {
     console.log('🔴 Error from Create action', error)
   }
