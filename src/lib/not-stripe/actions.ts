@@ -24,6 +24,7 @@ export const subscriptionCreated = async (
       throw new Error('Could not find an agency to upsert the subscription')
     }
     const planId : Plan = subscription.plan_id;
+    if(!planId) setTimeout(()=> {},1000)
     const data : Partial<Subscription> = {
         active: active,
         agencyId: agency.id,
@@ -33,7 +34,6 @@ export const subscriptionCreated = async (
         plan: planId,
     }
     const cleanedData = removeUndefinedFields(data);
-    
     const res = await db.subscription.upsert({
       where: {
         agencyId: agency.id,

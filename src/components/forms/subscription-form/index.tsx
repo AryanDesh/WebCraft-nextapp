@@ -5,6 +5,8 @@ import { Plan, Subscription } from '@prisma/client'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { db } from '@/lib/db'
+import { razorpay } from '@/lib/not-stripe'
+import Razorpay from 'razorpay'
 
 
 type Props = {
@@ -27,11 +29,10 @@ const router = useRouter();
   
     try {
       // Redirect to the payment URL if available
-      if (url) {
         console.log('Redirecting to payment page:', url)
-        window.location.href = url
-        return 
-      }
+        // const razorpayPayment = new window.Razorpay(subscription);
+        // razorpayPayment.open();
+        window.location.href = url;
 
   
       if (subscription.active) {

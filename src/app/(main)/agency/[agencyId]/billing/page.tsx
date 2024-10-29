@@ -33,21 +33,24 @@ const page = async ({ params }: Props) => {
       Subscription: true,
     },
   })
+  console.log(agencySubscription?.Subscription) 
+  const price = await razorpay.plans.all();
+  const prices = price.items.filter((c) => c.item.name === "WebCraft");
 
-  const prices = await razorpay.plans.all();
-  // console.log(prices);
-
-
+  
   const currentPlanDetails = pricingCards.find(
-    (c) => c.price === agencySubscription?.Subscription?.plan
+    (c) => c.plan === agencySubscription?.Subscription?.plan
   )
+  console.log(currentPlanDetails);
 
-  const charges = await razorpay.payments.all({
-    count: 5,
+  const charges = await db.invoices.findMany({
+    where:{
+      customerId: agencySubscription?.customerId
+    }
   })
 
   const allCharges = [
-    ...charges.items.map((item) => ({
+    ...charges.map((item) => ({
       description: item.description,
       id: item.id,
       date: `${new Date(item.created_at * 1000).toLocaleTimeString()} ${new Date(
@@ -61,7 +64,7 @@ const page = async ({ params }: Props) => {
   return (
     <>
     <SubscriptionHelper
-      prices={prices.items}
+      prices={prices}
       customerId={agencySubscription?.customerId || ''}
       planExists={agencySubscription?.Subscription?.active === true}
     />
@@ -71,7 +74,7 @@ const page = async ({ params }: Props) => {
     <div className="flex flex-col lg:!flex-row justify-between gap-8">
       <PricingCard
         planExists={agencySubscription?.Subscription?.active === true}
-        prices={prices.items}
+        prices={prices}
         customerId={agencySubscription?.customerId || ''}
         amt={
           agencySubscription?.Subscription?.active === true
@@ -109,7 +112,7 @@ const page = async ({ params }: Props) => {
       {addOns.map((addOn) => (
         <PricingCard
           planExists={agencySubscription?.Subscription?.active === true}
-          prices={prices.items}
+          prices={prices}
           customerId={agencySubscription?.customerId || ''}
           key={addOn.id}
           amt={

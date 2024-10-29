@@ -418,6 +418,18 @@ model Subscription {
   @@index([customerId])
 }
 
+model Invoices {
+  id                 String   @id @default(uuid())
+  paymentId          String
+  orderId            String
+  invoiceId          String
+  customerId         String
+  description        String
+  amount             String
+  created_at         DateTime
+  subscriptionId     String   @unique
+  @@index([customerId])
+}
 enum addOns {
   plan_PCx2xFImcAmemR
 }

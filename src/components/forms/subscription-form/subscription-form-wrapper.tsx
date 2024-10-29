@@ -22,6 +22,7 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
   const { data, setClose } = useModal()
   const router = useRouter()
   const customer_id = useRef(customerId);
+  if(!planExists) setTimeout(() => {},1000);
   const [selectedPlanId, setSelectedPlanId] = useState<Plan | ''>(
     data?.plans?.defaultPriceId || ''
   )
