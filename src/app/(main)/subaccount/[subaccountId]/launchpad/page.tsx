@@ -49,7 +49,8 @@ const LaunchPad = async ({ params, searchParams }: Props) => {
 //     `launchpad___${subaccountDetails.id}`
 //   )
 
-//   let connectedStripeAccount = false
+  let connectedStripeAccount = false
+  if(subaccountDetails.connectAccountId) connectedStripeAccount = true;
 
 //   if (searchParams.code) {
 //     if (!subaccountDetails.connectAccountId) {
@@ -108,20 +109,21 @@ const LaunchPad = async ({ params, searchParams }: Props) => {
                     used to run payouts.
                   </p>
                 </div>
-                {/* {subaccountDetails.connectAccountId ||
+                {subaccountDetails.connectAccountId ||
                 connectedStripeAccount ? (
                   <CheckCircleIcon
                     size={50}
                     className=" text-primary p-2 flex-shrink-0"
                   />
                 ) : (
-                  <Link
-                    className="bg-primary py-2 px-4 rounded-md text-white"
-                    href={stripeOAuthLink}
-                  >
-                    Start
-                  </Link>
-                )} */}
+                  // <Link
+                  //   className="bg-primary py-2 px-4 rounded-md text-white"
+                  //   href={stripeOAuthLink}
+                  // >
+                  //   Start
+                  // </Link>
+                  <label>Connect</label>
+                )}
               </div>
               <div className="flex justify-between items-center w-full h-20 border p-4 rounded-lg">
                 <div className="flex items-center gap-4">
@@ -146,6 +148,7 @@ const LaunchPad = async ({ params, searchParams }: Props) => {
                   >
                     Start
                   </Link>
+                  // <label>Connect</label>
                 )}
               </div>
             </CardContent>
@@ -157,3 +160,4 @@ const LaunchPad = async ({ params, searchParams }: Props) => {
 }
 
 export default LaunchPad
+

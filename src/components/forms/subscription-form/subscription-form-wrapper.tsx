@@ -19,6 +19,7 @@ type Props = {
 }
 
 const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
+  console.log(customerId)
   const { data, setClose } = useModal()
   const router = useRouter()
   const customer_id = useRef(customerId);
@@ -54,7 +55,10 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
   )
 
   useEffect(() => {
-    if (!selectedPlanId) return
+    if (!selectedPlanId) {
+     console.log(selectedPlanId)
+      return
+    }
     const createSecret = async () => {
       const subscriptionResponse = await fetch(
         '/api/not-stripe/create-subscription',
@@ -70,6 +74,7 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
         }
       )
       const subscriptionResponseData = await subscriptionResponse.json()
+      console.log(subscriptionResponseData);
       setSubscription({
         status: subscriptionResponseData.status,
         subscriptionId: subscriptionResponseData.subscriptionId,
@@ -78,10 +83,10 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
         plan_id: subscriptionResponseData.plan_id
       })
     //   Adding customer to the database using not-stripe/actions.ts
-    // console.log(subscription.subscriptionId);
 
       if(subscriptionResponseData.subscriptionId){
         setSubscriptionInfo(await subscriptionCreated(subscription ,customerId = customer_id.current, false));
+        console.log(subscription);
       }
       if (planExists) {
         toast({
@@ -129,11 +134,6 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
         {options.status && !planExists && SubscriptionInfo && (
           <>
             <h1 className="text-xl">Payment</h1>
-            {/* <Elements
-              stripe={getRazorpay()}
-              options={options}
-            >
-            </Elements> */}
             <SubscriptionForm subscription = {SubscriptionInfo} url ={subscription.url}/>
           </>
         )}

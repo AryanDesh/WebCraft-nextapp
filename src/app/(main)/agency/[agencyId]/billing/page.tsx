@@ -33,7 +33,7 @@ const page = async ({ params }: Props) => {
       Subscription: true,
     },
   })
-  console.log(agencySubscription?.Subscription) 
+  // console.log(agencySubscription?.Subscription) 
   const price = await razorpay.plans.all();
   const prices = price.items.filter((c) => c.item.name === "WebCraft");
 
@@ -41,7 +41,7 @@ const page = async ({ params }: Props) => {
   const currentPlanDetails = pricingCards.find(
     (c) => c.plan === agencySubscription?.Subscription?.plan
   )
-  console.log(currentPlanDetails);
+  // console.log(currentPlanDetails);
 
   const charges = await db.invoices.findMany({
     where:{
@@ -53,11 +53,9 @@ const page = async ({ params }: Props) => {
     ...charges.map((item) => ({
       description: item.description,
       id: item.id,
-      date: `${new Date(item.created_at * 1000).toLocaleTimeString()} ${new Date(
-        item.created_at * 1000
-      ).toLocaleDateString()}`,
+      date: item.created_at.toLocaleDateString(),
       status: 'Paid',
-      amount: `$${item.amount as number/100}`,
+      amount: `$${item.amount as unknown as number/100}`,
     })),
   ]
 

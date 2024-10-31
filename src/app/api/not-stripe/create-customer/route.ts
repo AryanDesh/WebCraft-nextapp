@@ -9,6 +9,8 @@ export async function POST(req: Request) {
     return new NextResponse('Missing data', {
       status: 400,
     })
+  // const value = await razorpay.customers.fetch("cust_PCwKXJmfdobMTI");
+  // console.log(value);
   try {
     const customer = await razorpay.customers.create({
       email,
@@ -23,7 +25,7 @@ export async function POST(req: Request) {
         shipping_address: shipping.address.line1
       }
     })
-    return Response.json({ customerId: customer.id })
+    return Response.json({ customerId: "cust_PCwKXJmfdobMTI" })
   } catch (error) {
     console.log('🔴 Error', error)
     return new NextResponse('Internal Server Error', { status: 500 })

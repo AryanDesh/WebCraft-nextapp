@@ -10,22 +10,17 @@ import {
   } from '@prisma/client'
   import {
     _getTicketsWithAllRelations,
-    // _getTicketsWithAllRelations,
     getAuthUserDetails,
     getMedia,
     getPipelineDetails,
     getTicketsWithTags,
-    // getFunnels,
-    // getMedia,
-    // getPipelineDetails,
-    // getTicketsWithTags,
+    getFunnels,
     getUserPermissions,
   } from './queries'
   import { db } from './db'
   import { z } from 'zod'
 
 import Razorpay from 'razorpay'
-//   import Stripe from 'stripe'
   
   export type NotificationWithUser =
     | ({
@@ -46,10 +41,10 @@ import Razorpay from 'razorpay'
     typeof getUserPermissions
   >
   
-//   export const FunnelPageSchema = z.object({
-//     name: z.string().min(1),
-//     pathName: z.string().optional(),
-//   })
+  export const FunnelPageSchema = z.object({
+    name: z.string().min(1),
+    pathName: z.string().optional(),
+  })
   
   const __getUsersWithAgencySubAccountPermissionsSidebarOptions = async (
     agencyId: string
@@ -159,6 +154,17 @@ export type RazorpayPlan = {
   interval: number;
 };
 
+
+export type RazorpayProduct = {
+  id: string;
+  name: string;
+  active : boolean;
+  description: string;
+  amount: string | number;   // Amount in smallest currency unit (e.g., paise)
+  currency: string | "INR"; // E.g., 'INR'
+  created_at?: number;
+  unit_amount: string | number;
+}
 export type RazorpayApiList<T> = {
   entity: 'collection';
   count: number;
@@ -167,9 +173,10 @@ export type RazorpayApiList<T> = {
 
 // Now you can define the Razorpay equivalent of `PricesList`:
 export type RazorpayPlanList = RazorpayApiList<RazorpayPlan>;
+export type RazorpayProductList = RazorpayApiList<RazorpayProduct>
 
-//   export type FunnelsForSubAccount = Prisma.PromiseReturnType<
-//     typeof getFunnels
-//   >[0]
+  export type FunnelsForSubAccount = Prisma.PromiseReturnType<
+    typeof getFunnels
+  >[0]
   
-//   export type UpsertFunnelPage = Prisma.FunnelPageCreateWithoutFunnelInput
+  export type UpsertFunnelPage = Prisma.FunnelPageCreateWithoutFunnelInput

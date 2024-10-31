@@ -1,16 +1,4 @@
 
-export async function GET(req: Request) {
-    try {
-        console.log('Webhook Route', )
-        return new NextResponse("Hello World")
-    } catch (error) {
-      console.log('🔴 Error', error)
-      return new NextResponse('Internal Server Error', {
-        status: 500,
-      })
-    }
-  }
-  
 import Razorpay from "razorpay";
 import crypto from "crypto"; 
 import { db } from "@/lib/db";
@@ -104,7 +92,6 @@ const WebhookEvents = new Set([
   
   
   import { NextRequest, NextResponse } from 'next/server'
-  import { headers } from 'next/headers'
   import { subscriptionCreated } from "@/lib/not-stripe/actions";
   import { Invoices } from "@prisma/client";
 
@@ -116,18 +103,18 @@ function removeUndefinedFields<T>(obj: Partial<T>): T {
   export async function POST(req: NextRequest) {
     const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
     const body = await req.json();
-    const headers = await req.headers;
-    // const sig= await headers['X-Razorpay-Signature']
-    console.log(headers);
     const {event} = body;
   try {
     if (WebhookEvents.has(event)) {
       const subscription = body.payload.subscription;
+      console.log(subscription.entity.id);
       const subscriptionDB = await db.subscription.findFirst({
         where: {
           subscriptionId: subscription.entity.id
         }
       })
+      if(!subscriptionDB) console.log('NO SUBSCRIPTION CREATED ', subscriptionDB);
+
       const invoice : Partial<Invoices>= {
         customerId: subscriptionDB?.customerId || "",
         subscriptionId:subscription.entity.id || "",
@@ -135,7 +122,7 @@ function removeUndefinedFields<T>(obj: Partial<T>): T {
         orderId:  body.payload.payment.entity.order_id || "",
         invoiceId:  body.payload.payment.entity.invoice_id || "",
         description:  body.payload.payment.entity.description || "",
-        amount:  body.payload.payment.entity.amount || "",
+        amount:  (body.payload.payment.entity.amount + "") || "",
         created_at: new Date(body.payload.payment.entity.created_at || Date.now())
       }
       const options = {
@@ -145,7 +132,7 @@ function removeUndefinedFields<T>(obj: Partial<T>): T {
         current_end: subscription.entity.current_end,
         plan_id: subscription.entity.plan_id
       }
-      const cleanedInvoice = await removeUndefinedFields(invoice);
+      const cleanedInvoice = removeUndefinedFields(invoice);
       switch (event) {
         case 'subscription.updated':
         case 'subscription.activated': {

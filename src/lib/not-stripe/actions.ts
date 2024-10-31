@@ -23,8 +23,14 @@ export const subscriptionCreated = async (
     if (!agency) {
       throw new Error('Could not find an agency to upsert the subscription')
     }
+    const sub = await db.subscription.findFirst({
+      where: {
+        agencyId: agency.id,
+      }
+    })
+    //Incase where there is already an active plan and a new plan needs to be created
+    if(!active && sub?.active === true ) return sub;
     const planId : Plan = subscription.plan_id;
-    if(!planId) setTimeout(()=> {},1000)
     const data : Partial<Subscription> = {
         active: active,
         agencyId: agency.id,
@@ -41,17 +47,20 @@ export const subscriptionCreated = async (
       create: cleanedData,
       update: data,
     })
-    console.log(`🟢 Created Subscription for ${subscription.subscriptiond}`)
+    console.log(`🟢 Created Subscription for ${subscription.subscriptionId}`)
     return res;
   } catch (error) {
     console.log('🔴 Error from Create action', error)
   }
 }
 
+
+//  Cant fetch based on the razorpya Account ID so have to update this function so that the new accounts api key can be fetched based on the razorpayaccountId and then creaing an new instance for that account and then fetching the relavant items.
+ 
 export const getConnectAccountProducts = async (razorpayAccountId: string) => {
     try {
-      const products = razorpay.items.all({
-        count: 50,
+      const products = await  razorpay.items.all({
+        count: 10,
       })
       return products
     } catch (error) {

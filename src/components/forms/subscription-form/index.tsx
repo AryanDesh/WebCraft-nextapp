@@ -15,6 +15,7 @@ type Props = {
 }
 
 const SubscriptionForm = ({ subscription , url}: Props) => {
+  console.log(subscription);
   const { toast } = useToast()
 const router = useRouter();
   const [priceError, setPriceError] = useState('')
@@ -28,13 +29,9 @@ const router = useRouter();
     if (!subscription.plan) return
   
     try {
-      // Redirect to the payment URL if available
+      console.log(subscription)
         console.log('Redirecting to payment page:', url)
-        // const razorpayPayment = new window.Razorpay(subscription);
-        // razorpayPayment.open();
         window.location.href = url;
-
-  
       if (subscription.active) {
         toast({
           title: 'Payment successful',
