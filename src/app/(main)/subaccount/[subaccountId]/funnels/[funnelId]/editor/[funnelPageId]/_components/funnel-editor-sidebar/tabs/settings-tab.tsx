@@ -109,6 +109,7 @@ const SettingsTab = (props: Props) => {
             )}
         </AccordionContent>
       </AccordionItem>
+      {/* <Label className='text-cyan-150 text-xl ml-3'>Customize all you want</Label> */}
       <AccordionItem
         value="Typography"
         className="px-6 py-0  border-y-[1px]"

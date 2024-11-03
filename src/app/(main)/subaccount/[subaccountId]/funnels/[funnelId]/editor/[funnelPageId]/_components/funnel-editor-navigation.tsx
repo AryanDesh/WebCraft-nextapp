@@ -225,8 +225,9 @@ const FunnelEditorNavigation = ({
             <div className="flex flex-row items-center gap-4">
               Draft
               <Switch
-                disabled
+                // disabled
                 defaultChecked={true}
+                // onChange={handleSwitch}
               />
               Publish
             </div>
