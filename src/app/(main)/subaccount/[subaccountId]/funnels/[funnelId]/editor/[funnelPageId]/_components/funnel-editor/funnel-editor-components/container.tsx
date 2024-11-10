@@ -9,6 +9,7 @@ import Recursive from './recursive'
 import { Trash } from 'lucide-react'
 
 type Props = { element: EditorElement }
+type tSrc = { src? : string}
 
 const Container = ({ element }: Props) => {
   const { id, content, name, styles, type } = element
@@ -59,13 +60,15 @@ const Container = ({ element }: Props) => {
         })
         break
       case 'video':
+        const videoUrl = window.prompt('Enter YouTube video URL:')
+        if (videoUrl){
         dispatch({
           type: 'ADD_ELEMENT',
           payload: {
             containerId: id,
             elementDetails: {
               content: {
-                src: 'https://www.youtube.com/embed/A3l6YYkXzzg?si=zbcCeWcpq7Cwf8W1',
+                src: videoUrl,
               },
               id: v4(),
               name: 'Video',
@@ -74,6 +77,7 @@ const Container = ({ element }: Props) => {
             },
           },
         })
+      }
         break
       case 'container':
         dispatch({

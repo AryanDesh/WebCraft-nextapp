@@ -189,3 +189,4 @@ const Checkout = (props: Props) => {
 }
 
 export default Checkout
+

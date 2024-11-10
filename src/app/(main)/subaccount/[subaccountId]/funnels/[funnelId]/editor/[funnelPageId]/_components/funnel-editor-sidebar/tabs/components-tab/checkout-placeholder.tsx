@@ -28,3 +28,4 @@ const CheckoutPlaceholder = (props: Props) => {
 }
 
 export default CheckoutPlaceholder
+
