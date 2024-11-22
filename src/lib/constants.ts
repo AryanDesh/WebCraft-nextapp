@@ -40,20 +40,20 @@ export const pricingCards = [
     {
       title: 'Unlimited Saas',
       description: 'The ultimate agency kit',
-      price: '$199',
+      price: 'Rs9999',
       duration: 'month',
       highlight: 'Key features',
       features: ['Rebilling', '24/7 Support team'],
-      plan: 'plan_PCwepTaqRPplIc',
+      plan: 'plan_PNhJWx4YoOt8Zg',
     },
     {
       title: 'Basic',
       description: 'For serious agency owners',
-      price: '$49',
+      price: 'Rs3500',
       duration: 'month',
       highlight: 'Everything in Starter, plus',
       features: ['Unlimited Sub accounts', 'Unlimited Team members'],
-      plan: 'plan_PCwfKUDlBc3sLV',
+      plan: 'plan_PNhIs7nOipUXgE',
     },
   ]
 

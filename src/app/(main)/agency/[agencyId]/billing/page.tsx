@@ -35,7 +35,7 @@ const page = async ({ params }: Props) => {
   })
   // console.log(agencySubscription?.Subscription) 
   const price = await razorpay.plans.all();
-  const prices = price.items.filter((c) => c.item.name === "WebCraft");
+  const prices = price.items.filter((c) => c.item.name === "demo");
 
   
   const currentPlanDetails = pricingCards.find(

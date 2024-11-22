@@ -128,9 +128,9 @@ const SubaccountPageId = async ({ params, searchParams }: Props) => {
           <div className="absolute -top-10 -left-10 right-0 bottom-0 z-30 flex items-center justify-center backdrop-blur-md bg-background/50">
             <Card>
               <CardHeader>
-                <CardTitle>Connect Your Stripe</CardTitle>
+                <CardTitle>Connect Your Razorpay</CardTitle>
                 <CardDescription>
-                  You need to connect your stripe account to see metrics
+                  You need to connect your Razorpay account to see metrics
                 </CardDescription>
                 <Link
                   href={`/subaccount/${subaccountDetails.id}/launchpad`}

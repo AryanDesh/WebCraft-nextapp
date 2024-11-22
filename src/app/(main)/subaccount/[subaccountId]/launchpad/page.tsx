@@ -82,19 +82,6 @@ const LaunchPad = async ({ params, searchParams }: Props) => {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
-              <div className="flex justify-between items-center w-full h-20 border p-4 rounded-lg ">
-                <div className="flex items-center gap-4">
-                  <Image
-                    src="/appstore.png"
-                    alt="App logo"
-                    height={80}
-                    width={80}
-                    className="rounded-md object-contain"
-                  />
-                  <p>Save the website as a shortcut on your mobile devide</p>
-                </div>
-                <Button>Start</Button>
-              </div>
               <div className="flex justify-between items-center w-full h-20 border p-4 rounded-lg">
                 <div className="flex items-center gap-4">
                   <Image
@@ -105,7 +92,7 @@ const LaunchPad = async ({ params, searchParams }: Props) => {
                     className="rounded-md object-contain "
                   />
                   <p>
-                    Connect your stripe account to accept payments. Stripe is
+                    Connect your razorpay account to accept payments. Razorpay is
                     used to run payouts.
                   </p>
                 </div>

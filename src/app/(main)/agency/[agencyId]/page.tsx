@@ -28,6 +28,7 @@ const Page = async ({
   params: { agencyId: string }
   searchParams: { code: string }
 }) => {
+  await params;
   let currency = 'USD'
   let sessions
   let totalClosedSessions
@@ -102,9 +103,9 @@ const Page = async ({
         <div className="absolute -top-10 -left-10 right-0 bottom-0 z-30 flex items-center justify-center backdrop-blur-md bg-background/50">
           <Card>
             <CardHeader>
-              <CardTitle>Connect Your Stripe</CardTitle>
+              <CardTitle>Connect Your Razorpay</CardTitle>
               <CardDescription>
-                You need to connect your stripe account to see metrics
+                You need to connect your Razorpay account to see metrics
               </CardDescription>
               <Link
                 href={`/agency/${agencyDetails.id}/launchpad`}

@@ -39,6 +39,7 @@ export const subscriptionCreated = async (
         subscriptionId: subscription.subscriptionId,
         plan: planId,
     }
+    
     const cleanedData = removeUndefinedFields(data);
     const res = await db.subscription.upsert({
       where: {
@@ -53,7 +54,6 @@ export const subscriptionCreated = async (
     console.log('🔴 Error from Create action', error)
   }
 }
-
 
 //  Cant fetch based on the razorpya Account ID so have to update this function so that the new accounts api key can be fetched based on the razorpayaccountId and then creaing an new instance for that account and then fetching the relavant items.
  

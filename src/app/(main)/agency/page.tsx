@@ -15,6 +15,7 @@ const Page = async ({
 
   //get the users details
   const user = await getAuthUserDetails()
+  await searchParams;
   if (agencyId) {
     if (user?.role === 'SUBACCOUNT_GUEST' || user?.role === 'SUBACCOUNT_USER') {
       return redirect('/subaccount')

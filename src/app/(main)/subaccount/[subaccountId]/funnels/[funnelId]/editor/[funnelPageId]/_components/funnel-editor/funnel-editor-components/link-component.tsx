@@ -22,7 +22,7 @@ const LinkComponent = (props: Props) => {
   }
 
   const handleOnClickBody = (e: React.MouseEvent) => {
-    e.stopPropagation()
+    // e.preventDefault()
     dispatch({
       type: 'CHANGE_CLICKED_ELEMENT',
       payload: {
@@ -30,7 +30,6 @@ const LinkComponent = (props: Props) => {
       },
     })
   }
-
   const styles = props.element.styles
 
   const handleDeleteElement = () => {

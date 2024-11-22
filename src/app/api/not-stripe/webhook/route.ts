@@ -132,6 +132,7 @@ function removeUndefinedFields<T>(obj: Partial<T>): T {
         current_end: subscription.entity.current_end,
         plan_id: subscription.entity.plan_id
       }
+      
       const cleanedInvoice = removeUndefinedFields(invoice);
       switch (event) {
         case 'subscription.updated':

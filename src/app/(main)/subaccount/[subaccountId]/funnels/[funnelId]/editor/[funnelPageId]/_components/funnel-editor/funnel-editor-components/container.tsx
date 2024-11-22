@@ -39,14 +39,16 @@ const Container = ({ element }: Props) => {
         })
         break
       case 'link':
+        const Url = window.prompt('Enter Link:');
         dispatch({
           type: 'ADD_ELEMENT',
           payload: {
             containerId: id,
             elementDetails: {
               content: {
-                innerText: 'Link Element',
-                href: '#',
+                innerText: '____',
+                href: Url || '',
+                src: Url || ''
               },
               id: v4(),
               name: 'Link',

@@ -396,8 +396,8 @@ model Notification {
 }
 
 enum Plan {
-  plan_PCwfKUDlBc3sLV
-  plan_PCwepTaqRPplIc
+  plan_PNhJWx4YoOt8Zg
+  plan_PNhIs7nOipUXgE
 }
 
 model Subscription {

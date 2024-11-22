@@ -26,8 +26,8 @@ export async function POST(req: Request) {
         }
         console.log('Updating the subscription')
         const currentSubscriptionDetails = await razorpay.subscriptions.fetch(
-          subscriptionExists.Subscription.subscriptionId
-        )
+          subscriptionExists.Subscription.subscriptionId,
+        ) 
         const subscription = await razorpay.subscriptions.update(
             subscriptionExists.Subscription.subscriptionId,
             {
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
         )
         return NextResponse.json({
           subscriptionId: subscription.id,
-          status: subscription.status,
+          status: "active",
           url: subscription.short_url,
           plan_id: subscription.plan_id,
           current_end: subscription.ended_at,
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
         })
         return NextResponse.json({
           subscriptionId: subscription.id,
-          status: subscription.status,
+          status: "active",
           url: subscription.short_url,
           current_end: subscription.expire_by,
           plan_id : subscription.plan_id
